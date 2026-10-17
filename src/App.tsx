@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   BrowserRouter,
@@ -83,7 +84,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 md:flex">
+    <div className="min-h-screen bg-slate-950 md:flex">
       <Sidebar
         boards={boards}
         activeBoardId={activeBoardId}
@@ -97,7 +98,7 @@ function AppContent() {
         {apiError && (
           <div
             role="status"
-            className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800"
+            className="border-b border-amber-400/20 bg-amber-500/10 px-4 py-2.5 text-sm font-medium text-amber-300"
           >
             {apiError}
           </div>
@@ -127,13 +128,17 @@ function AppContent() {
       </div>
 
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h2 className="text-xl font-bold text-gray-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl bg-slate-900 p-7 shadow-2xl ring-1 ring-white/10">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/15 text-indigo-300">
+              <Plus size={24} />
+            </div>
+
+            <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-slate-100">
               Create New Board
             </h2>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-slate-400">
               Enter a name for your new project board.
             </p>
 
@@ -147,13 +152,13 @@ function AppContent() {
                 if (e.key === "Enter") handleCreateBoard();
                 if (e.key === "Escape") setShowCreateModal(false);
               }}
-              className="mt-5 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="mt-5 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/30"
             />
 
-            <div className="mt-5 flex justify-end gap-3">
+            <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
               >
                 Cancel
               </button>
@@ -161,7 +166,7 @@ function AppContent() {
               <button
                 onClick={handleCreateBoard}
                 disabled={!newBoardTitle.trim()}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-900/40 transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-400/40 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
               >
                 Create Board
               </button>

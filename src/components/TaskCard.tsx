@@ -1,4 +1,3 @@
-
 import type { Task, User } from "../types";
 import { CalendarDays, Pencil, Trash2 } from "lucide-react";
 
@@ -10,9 +9,21 @@ interface TaskCardProps {
 }
 
 const priorityStyles = {
-  Low: "bg-green-100 text-green-700",
-  Medium: "bg-yellow-100 text-yellow-700",
-  High: "bg-red-100 text-red-700",
+  Low: {
+    badge: "bg-emerald-500/10 text-emerald-300 ring-emerald-400/30",
+    dot: "bg-emerald-500",
+    edge: "border-l-emerald-400",
+  },
+  Medium: {
+    badge: "bg-amber-500/10 text-amber-300 ring-amber-400/30",
+    dot: "bg-amber-500",
+    edge: "border-l-amber-400",
+  },
+  High: {
+    badge: "bg-rose-500/10 text-rose-300 ring-rose-400/30",
+    dot: "bg-rose-500",
+    edge: "border-l-rose-500",
+  },
 };
 
 export default function TaskCard({
@@ -21,26 +32,28 @@ export default function TaskCard({
   onEdit,
   onDelete,
 }: TaskCardProps) {
-  const assignee = users.find(
-    (user) => user.id === task.assigneeId
-  );
+  const assignee = users.find((user) => user.id === task.assigneeId);
 
   const isOverdue =
     task.dueDate !== null &&
     task.dueDate < new Date().toISOString().slice(0, 10);
 
+  const style = priorityStyles[task.priority];
+
   return (
-    <article className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <h3 className="break-words font-semibold text-gray-800">
+    <article
+      className={`rounded-xl border-l-4 bg-slate-800 p-4 shadow-sm ring-1 ring-white/10 transition hover:bg-slate-700/80 hover:shadow-xl hover:shadow-black/40 ${style.edge}`}
+    >
+      <div className="mb-2 flex items-start justify-between gap-2">
+        <h3 className="break-words font-semibold leading-snug text-slate-100">
           {task.title}
         </h3>
 
-        <div className="flex shrink-0 gap-1">
+        <div className="flex shrink-0 gap-0.5">
           <button
             onClick={() => onEdit(task)}
             aria-label="Edit task"
-            className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100"
+            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-indigo-500/20 hover:text-indigo-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
           >
             <Pencil size={16} />
           </button>
@@ -48,7 +61,7 @@ export default function TaskCard({
           <button
             onClick={() => onDelete(task.id)}
             aria-label="Delete task"
-            className="rounded-lg p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600"
+            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-red-500/20 hover:text-red-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
           >
             <Trash2 size={16} />
           </button>
@@ -56,23 +69,24 @@ export default function TaskCard({
       </div>
 
       {task.description && (
-        <p className="mb-3 text-sm text-gray-500">
+        <p className="mb-3 text-sm leading-6 text-slate-400">
           {task.description}
         </p>
       )}
 
       <span
-        className={`inline-block rounded-md px-2 py-1 text-xs font-medium ${priorityStyles[task.priority]}`}
+        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${style.badge}`}
       >
+        <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
         {task.priority} Priority
       </span>
 
       {task.labels.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-1">
+        <div className="mt-3 flex flex-wrap gap-1.5">
           {task.labels.map((label) => (
             <span
               key={label}
-              className="rounded-md bg-indigo-50 px-2 py-1 text-xs text-indigo-700"
+              className="rounded-md bg-slate-700 px-2 py-1 text-xs font-medium text-slate-300"
             >
               {label}
             </span>
@@ -80,17 +94,23 @@ export default function TaskCard({
         </div>
       )}
 
-      <div className="mt-4 flex items-center justify-between gap-2 border-t border-gray-100 pt-3">
+      <div className="mt-4 flex items-center justify-between gap-2 border-t border-slate-700 pt-3">
         <div className="flex min-w-0 items-center gap-2">
-          {assignee?.image && (
+          {assignee?.image ? (
             <img
               src={assignee.image}
               alt=""
-              className="h-7 w-7 rounded-full object-cover"
+              className="h-7 w-7 rounded-full object-cover ring-2 ring-slate-800"
             />
+          ) : (
+            assignee && (
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-300">
+                {assignee.firstName.charAt(0)}
+              </span>
+            )
           )}
 
-          <span className="truncate text-xs text-gray-600">
+          <span className="truncate text-xs font-medium text-slate-300">
             {assignee
               ? `${assignee.firstName} ${assignee.lastName}`
               : "Unassigned"}
@@ -99,8 +119,8 @@ export default function TaskCard({
 
         {task.dueDate && (
           <span
-            className={`flex shrink-0 items-center gap-1 text-xs ${
-              isOverdue ? "text-red-600" : "text-gray-500"
+            className={`flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ${
+              isOverdue ? "bg-red-500/15 text-red-300" : "bg-slate-700 text-slate-400"
             }`}
           >
             <CalendarDays size={14} />
